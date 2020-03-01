@@ -13,12 +13,14 @@ mongoose.Promise = global.Promise;
 
 mongoose.connect(config.db_dev, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
+const connection = mongoose.connection;
+
 connection.on('error', err => {
     console.log(`MongoDB connection error: ${err}`);
     process.exit(-1);
 });
 
-connection.once('open', async() => {
+connection.once('open', async () => {
     console.log('Connection to database established successfully! :)');
 });
 
