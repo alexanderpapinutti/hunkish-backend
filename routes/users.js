@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/login', (req, res) => res.send('Login'));
+let usersRoute = router;
 
-router.get('/register', (req, res) => res.send('Register'));
+usersRoute.get('/user/:id', (req, res) => res.send('Get user'));
 
-module.exports = router;
+usersRoute.get('/users', (req, res) => res.send('Get users'));
+
+module.exports = usersRoute;

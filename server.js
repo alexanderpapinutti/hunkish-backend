@@ -24,7 +24,9 @@ connection.once('open', async () => {
     console.log('Connection to database established successfully! :)');
 });
 
-app.use('/', require('./routes/index'));
+app.use('/', require('./routes/register'));
+
+app.use('/auth', require('./routes/authenticate'))
 
 app.use('/users', require('./routes/users'));
 
