@@ -5,31 +5,20 @@ const jwt = require('jsonwebtoken');
 const secret = 'mysecretsshhh';
 
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    User.findOne({ email }, (err, user) => {
+    return User.findOne({ email }, async (err, user) => {
         if (err) {
-            console.error(err);
             return res.status(500).json({ error: 'Internal error please try again' });
         } else if (!user) {
             return res.status(401).json({ error: 'Incorrect email or password' });
         } else {
-            user.isCorrectPassword(password, (err, same) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Internal error please try again' });
-                } else if (!same) {
-                    return res.status(401).json({ error: 'Incorrect email or password' });
-                } else {
-                    // Issue token
-                    const payload = { email };
-                    const token = jwt.sign(payload, secret, {
-                        expiresIn: '1h'
-                    });
+            let validation = await user.validatePassword(password);
 
-                    return res.cookie('token', token, { httpOnly: true }).sendStatus(200);
-                }
-            });
+            if (validation) {
+                return res.status(200).send({ responseBody: user })
+            }
         }
     });
 });

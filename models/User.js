@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const saltRounds = 10;
-
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -35,46 +33,24 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', function (next) {
-    // Check if document is new or a new password has been set
+
     if (this.isNew || this.isModified('password')) {
-        // Saving reference to this because of changing scopes
-        const document = this;
-        console.log(document.password);
-        bcrypt.hash(document.password, saltRounds,
-            function (err, hashedPassword) {
-                if (err) {
-                    next(err);
-                }
-                else {
-                    document.password = hashedPassword;
-                    next();
-                }
-            });
+
+        bcrypt.hash(this.password, 10, (err, hashedPassword) => {
+            if (err) {
+                next(err);
+            } else {
+                this.password = hashedPassword;
+                next();
+            }
+        });
     } else {
         next();
     }
 });
 
-UserSchema.methods.isCorrectPassword = function (password, callback) {
-    bcrypt.compare(password, this.password, function (err, same) {
-        if (err) {
-            callback(err);
-        } else {
-            callback(err, same);
-        }
-    });
+UserSchema.methods.validatePassword = function (data) {
+    return bcrypt.compare(data, this.password)
 }
 
-// UserSchema.methods.isCorrectPassword = (password, callback) => {
-//     const document = this;
-//     console.log(document.password, password)
-
-//     bcrypt.compare(password, document.password, (err, same) => {
-//         if (err) {
-//             return callback(err);
-//         }
-//         console.log(1)
-//         return callback(same);
-//     });
-// }
 module.exports = mongoose.model('User', UserSchema);
