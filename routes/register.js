@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const express = require('express');
-const User = require('../models/User');
 const router = express.Router();
+const User = require('../models/User');
 
 router.post('/register', async (req, res) => {
     const password = _.get(req, 'body.password');
@@ -10,9 +10,9 @@ router.post('/register', async (req, res) => {
     const email = _.get(req, 'body.email');
 
     try {
-        new User({ password, firstName, lastName, email }).save();
+        await new User({ password, firstName, lastName, email, approved: false }).save();
 
-        return res.status(200).send({ message: 'User added successfully' });
+        return res.status(200).send({ message: 'User registered successfully' });
 
     } catch (e) {
 

@@ -28,6 +28,6 @@ app.use('/', require('./routes/register'));
 
 app.use('/auth', require('./routes/authenticate'))
 
-app.use('/users', require('./routes/users'));
+app.use('/user', require('./routes/user'));
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

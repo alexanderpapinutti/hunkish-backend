@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: false,
+        required: true,
         unique: true
     },
     firstName: {
@@ -18,11 +18,18 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    approved: {
+        type: Boolean,
+        required: true
     },
     password: {
-        type: String,
-        required: false
+        type: String
     },
     deleted: {
         type: Boolean,
