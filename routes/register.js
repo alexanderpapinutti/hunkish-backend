@@ -10,9 +10,7 @@ router.post('/register', async (req, res) => {
     const email = _.get(req, 'body.email');
 
     try {
-        const newUser = new User({ password, firstName, lastName, email })
-
-        await newUser.save();
+        new User({ password, firstName, lastName, email }).save();
 
         return res.status(200).send({ message: 'User added successfully' });
 

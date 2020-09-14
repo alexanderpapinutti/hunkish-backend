@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false
     },
     deleted: {
         type: Boolean,
@@ -36,11 +36,11 @@ UserSchema.pre('save', function (next) {
 
     if (this.isNew || this.isModified('password')) {
 
-        bcrypt.hash(this.password, 10, (err, hashedPassword) => {
+        bcrypt.hash(this.password, 10, (err, hash) => {
             if (err) {
                 next(err);
             } else {
-                this.password = hashedPassword;
+                this.password = hash;
                 next();
             }
         });
@@ -49,8 +49,8 @@ UserSchema.pre('save', function (next) {
     }
 });
 
-UserSchema.methods.validatePassword = function (data) {
-    return bcrypt.compare(data, this.password)
+UserSchema.methods.validatePassword = function (password) {
+    return bcrypt.compare(password, this.password)
 }
 
 module.exports = mongoose.model('User', UserSchema);
